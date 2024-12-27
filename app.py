@@ -1,4 +1,4 @@
-from flask import Flask, make_response
+from flask import Flask
 import tensorflow as tf
 
 import tensorflow_hub as hub
@@ -12,7 +12,7 @@ from six import BytesIO
 # For drawing onto the image.
 import numpy as np
 from PIL import Image
-from PIL import ImageColor
+from PIL import ImageColor  
 from PIL import ImageDraw
 from PIL import ImageFont
 from PIL import ImageOps
@@ -22,22 +22,27 @@ from matplotlib.figure import Figure
 
 # For measuring the inference time.
 import time
-
 app = Flask(__name__)
 
-@app.route('/')
-def index():
 
+@app.route('/')
+def hello():
+    return 'Running on local server address'
+
+@app.route('/api')
+def index():
     def display_image(image):
-        fig = plt.figure(figsize=(20, 15))
-        plt.grid(False)
-        # plt.imshow(image)
-        canvas = FigureCanvas(fig)
-        png_output= BytesIO()
-        canvas.print_png(png_output)
-        response = make_response(png_output.getvalue())
-        response.headers['Content-Type'] = 'image/png'
-        return response
+            fig = plt.figure(figsize=(20, 15))
+            plt.grid(False)
+            plt.imshow(image)
+            canvas = FigureCanvas(fig)
+            png_output= BytesIO()
+            canvas.print_png(png_output)
+
+            return png_output
+            # response = make_response(png_output.getvalue())
+            # response.headers['Content-Type'] = 'image/png'
+            # return response
 
     def download_resize_img(url, n_width=256, n_height=256, display=False):
         _, filename = tempfile.mkstemp(suffix=".jpg")
@@ -149,4 +154,8 @@ def index():
 
     run_detector(detector, downloaded_image_path)
 
-    return display_image
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0")
+   
+    
