@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify, Response
 import tensorflow as tf
 
 import tensorflow_hub as hub
@@ -27,7 +27,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def hello():
-    return 'Running on local server address'
+    return 'Does this update?'
 
 @app.route('/api')
 def index():
@@ -36,10 +36,11 @@ def index():
             plt.grid(False)
             plt.imshow(image)
             canvas = FigureCanvas(fig)
-            png_output= BytesIO()
+            global png_output 
+            
+            png_output = BytesIO()
             canvas.print_png(png_output)
 
-            return png_output
             # response = make_response(png_output.getvalue())
             # response.headers['Content-Type'] = 'image/png'
             # return response
@@ -154,6 +155,16 @@ def index():
 
     run_detector(detector, downloaded_image_path)
 
+    print(png_output)
+    return png_output
+
+@app.route('/test', methods=['GET', 'POST'])
+def test():
+    
+    response = jsonify(message = "Hello from flask server",)
+
+
+    return Response(response)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0")
