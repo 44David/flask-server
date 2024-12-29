@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, Response
+from flask import Flask, jsonify, make_response
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -36,18 +36,20 @@ def index():
     import time
 
     def display_image(image):
+        
             fig = plt.figure(figsize=(20, 15))
             plt.grid(False)
             plt.imshow(image)
-            canvas = FigureCanvas(fig)
-            global png_output 
-            
-            png_output = BytesIO()
-            canvas.print_png(png_output)
 
-            # response = make_response(png_output.getvalue())
-            # response.headers['Content-Type'] = 'image/png'
-            # return response
+            fig = plt.gcf()
+            buffer = BytesIO()
+            fig.savefig(buffer)
+            buffer.seek(0)
+            global img
+
+            img = Image.open(buffer)
+            img.save('Final-Image.png')
+
 
     def download_resize_img(url, n_width=256, n_height=256, display=False):
         _, filename = tempfile.mkstemp(suffix=".jpg")
@@ -159,8 +161,7 @@ def index():
 
     run_detector(detector, downloaded_image_path)
 
-    print(png_output)
-    return png_output
+    return img
 
 
 if __name__ == "__main__":
