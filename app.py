@@ -1,36 +1,40 @@
 from flask import Flask, jsonify, Response
-import tensorflow as tf
+from flask_cors import CORS
 
-import tensorflow_hub as hub
-
-# For downloading the image.
-import matplotlib.pyplot as plt
-import tempfile
-from six.moves.urllib.request import urlopen
-from six import BytesIO
-
-# For drawing onto the image.
-import numpy as np
-from PIL import Image
-from PIL import ImageColor  
-from PIL import ImageDraw
-from PIL import ImageFont
-from PIL import ImageOps
-
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-from matplotlib.figure import Figure
-
-# For measuring the inference time.
-import time
 app = Flask(__name__)
-
+CORS(app)
 
 @app.route('/')
 def hello():
     return 'Does this update?'
 
+
+@app.route('/test', methods=['GET', 'POST'])
+def test():
+    
+    message = { "res": "Hello from flask server" }
+    return jsonify(message)
+
+
 @app.route('/api')
 def index():
+    import tensorflow as tf
+    import tensorflow_hub as hub
+
+    import matplotlib.pyplot as plt
+    from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+    from matplotlib.figure import Figure
+
+    import tempfile
+    from six.moves.urllib.request import urlopen
+    from six import BytesIO
+
+    import numpy as np
+    from PIL import Image, ImageColor, ImageDraw, ImageFont, ImageOps
+
+
+    import time
+
     def display_image(image):
             fig = plt.figure(figsize=(20, 15))
             plt.grid(False)
@@ -158,13 +162,6 @@ def index():
     print(png_output)
     return png_output
 
-@app.route('/test', methods=['GET', 'POST'])
-def test():
-    
-    response = jsonify(message = "Hello from flask server",)
-
-
-    return Response(response)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0")
