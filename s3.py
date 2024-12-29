@@ -6,7 +6,7 @@ def upload():
     # loads .env variables
     load_dotenv()
 
-    # Figoure out how to access file
+    # Figure out how to access file
     # file = 
 
     bucket_name = os.environ['S3_BUCKET']
