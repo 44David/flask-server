@@ -9,10 +9,10 @@ def upload():
     # Figure out how to access file
     # file = 
 
-    bucket_name = os.environ['S3_BUCKET']
-    access_key = os.environ['S3_ACCESS_KEY']
-    access_secret = os.environ['S3_ACCESS_SECRET']
-    region = os.environ['S3_REGION']
+    bucket_name = os.environ['BUCKET_NAME']
+    access_key = os.environ['ACCESS_KEY']
+    access_secret = os.environ['SECRET_ACCESS_KEY']
+    region = os.environ['BUCKET_REGION']
     s3_link = 'http://{}.s3.amazonaws.com/'.format(bucket_name)
 
     s3_client = boto3.client(

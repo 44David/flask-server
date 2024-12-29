@@ -1,5 +1,7 @@
-from flask import Flask, jsonify, make_response
+from flask import Flask, jsonify, make_response, request
 from flask_cors import CORS
+from PIL import Image
+import io
 from model import run_model
 from s3 import upload
 
@@ -16,14 +18,20 @@ def test():
     return jsonify(message)
 
 
-@app.route('/api')
-async def index():
-
-    await run_model()
-
-    s3_link = await upload()
+@app.route('/api', methods=['POST'])
+def index():
+    file = request.data
     
-    return jsonify({"s3_link": s3_link})
+    img = Image.open(io.BytesIO(file))
+    img.save('output.png')
+    
+    # await run_model(file)
+
+    # s3_link = await upload()
+    
+    # return jsonify({"s3_link": s3_link})
+
+    return 'Hello'
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0")
