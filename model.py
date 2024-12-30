@@ -16,22 +16,24 @@ def run_model(s3_url):
 
 
     import time
+    import mimetypes
+
+    from s3 import Upload
 
     def display_image(image):
         
-            fig = plt.figure(figsize=(20, 15))
-            plt.grid(False)
-            plt.imshow(image)
+        fig = plt.figure(figsize=(20, 15))
+        plt.grid(False)
+        plt.imshow(image)
+        
+        global buf
+        fig = plt.gcf()
+        buffer = BytesIO()
+        fig.savefig(buffer)
+        buf = buffer.seek(0)
 
-            fig = plt.gcf()
-            buffer = BytesIO()
-            fig.savefig(buffer)
-            buffer.seek(0)
-            global img
-
-            img = Image.open(buffer)
-            img.save('Final-Image.png')
-
+        global img
+        img = Image.open(buffer)
 
     def download_resize_img(url, n_width=256, n_height=256, display=False):
         _, filename = tempfile.mkstemp(suffix=".jpg")
@@ -143,4 +145,11 @@ def run_model(s3_url):
 
     run_detector(detector, downloaded_image_path)
 
+    upload = Upload()
+    upload.s3_upload(buf, img.filename, mimetypes.guess_type(img.filename))
+
+    # img.save('Final-Image.png')
+
+
     return img
+    

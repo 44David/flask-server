@@ -2,14 +2,13 @@ from dotenv import load_dotenv
 import os
 import boto3, botocore
 import io
+from PIL import Image
 
 
 class Upload():
-    def s3_upload(self, img, img_name, img_type):
+    def s3_upload(self, buffer, img_name, img_type):
         # loads .env variables
         load_dotenv()
-        
-        img = io.BytesIO(img.get("data"))
 
         bucket_name = os.environ['BUCKET_NAME']
         access_key = os.environ['ACCESS_KEY']
@@ -28,7 +27,7 @@ class Upload():
         try:
                 
             s3_client.upload_fileobj(
-                img, 
+                buffer, 
                 bucket_name, 
                 img_name, 
                 ExtraArgs={
