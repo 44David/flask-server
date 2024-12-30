@@ -3,7 +3,7 @@ from flask_cors import CORS
 from PIL import Image
 import io
 from model import run_model
-from s3 import upload
+from s3 import Upload
 
 app = Flask(__name__)
 CORS(app)
@@ -20,16 +20,17 @@ def test():
 
 @app.route('/api', methods=['POST'])
 def index():
-    file = request.data
+    req_json = request.get_json()
     
-    img = Image.open(io.BytesIO(file))
-    img.save('output.png')
-    
-    # await run_model(file)
+    img_buffer = req_json.get("fileBuffer")
+    img_name = req_json.get("fileName")
+    img_type = req_json.get("fileType")
 
-    # s3_link = await upload()
-    
-    # return jsonify({"s3_link": s3_link})
+
+    upload = Upload()
+
+    s3_link = upload.s3_upload(img_buffer, img_name, img_type)
+    run_model(s3_link)
 
     return 'Hello'
 
