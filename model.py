@@ -1,4 +1,4 @@
-def run_model():
+def run_model(s3_url):
 
     import tensorflow as tf
     import tensorflow_hub as hub
@@ -106,7 +106,7 @@ def run_model():
         return image
 
 
-    image_url = "https://upload.wikimedia.org/wikipedia/commons/6/60/Naxos_Taverna.jpg" 
+    image_url = s3_url
     downloaded_image_path = download_resize_img(image_url, 1280, 856, True)
 
     module_handle = "https://tfhub.dev/google/faster_rcnn/openimages_v4/inception_resnet_v2/1"

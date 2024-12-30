@@ -22,15 +22,10 @@ def test():
 def index():
     req_json = request.get_json()
     
-    img_buffer = req_json.get("fileBuffer")
-    img_name = req_json.get("fileName")
-    img_type = req_json.get("fileType")
 
+    s3_url = req_json.get("s3Url")
 
-    upload = Upload()
-
-    s3_link = upload.s3_upload(img_buffer, img_name, img_type)
-    run_model(s3_link)
+    run_model(s3_url)
 
     return 'Hello'
 

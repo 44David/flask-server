@@ -5,11 +5,11 @@ import io
 
 
 class Upload():
-    def s3_upload(self, img_buffer, img_name, img_type):
+    def s3_upload(self, img, img_name, img_type):
         # loads .env variables
         load_dotenv()
         
-        img = io.BytesIO(img_buffer.get("data"))
+        img = io.BytesIO(img.get("data"))
 
         bucket_name = os.environ['BUCKET_NAME']
         access_key = os.environ['ACCESS_KEY']
