@@ -21,7 +21,6 @@ def test():
 @app.route('/api', methods=['POST'])
 def index():
     req_json = request.get_json()
-    
 
     s3_url = req_json.get("s3Url")
 

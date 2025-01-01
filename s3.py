@@ -17,6 +17,7 @@ class Upload():
         s3_link = 'http://{}.s3.amazonaws.com/'.format(bucket_name)
 
 
+
         s3_client = boto3.client(
             "s3", 
             region_name=region,

@@ -13,6 +13,7 @@ def run_model(s3_url):
 
     import numpy as np
     from PIL import Image, ImageColor, ImageDraw, ImageFont, ImageOps
+    import io
 
 
     import time
@@ -25,23 +26,21 @@ def run_model(s3_url):
         fig = plt.figure(figsize=(20, 15))
         plt.grid(False)
         plt.imshow(image)
-        
-        global final_buf
         fig = plt.gcf()
-        buffer = BytesIO()
+
+        global upload_fs, im
+
+        buffer = io.BytesIO()
         fig.savefig(buffer)
-        buffer.seek(0)
+        im = Image.open(buffer)
 
-        global img
-
-        img = Image.open(buffer)
-
-
+        upload_fs = io.BytesIO()
+        im.save(upload_fs,  format)
+        
+        # buffer.seek(0)
         # bytes = buffer.read()
         # buf = BytesIO(bytes)
-        
         # final_buf = buf.read()
-
         # img = Image.open(buffer)
 
     def download_resize_img(url, n_width=256, n_height=256, display=False):
@@ -155,10 +154,8 @@ def run_model(s3_url):
     run_detector(detector, downloaded_image_path)
 
     upload = Upload()
-    upload.s3_upload(img, img.filename, mimetypes.guess_type(img.filename))
-
-    # img.save('Final-Image.png')
+    upload.s3_upload(upload_fs, im.filename, mimetypes.guess_type(im.filename))
 
 
-    return img
+    return upload_fs
     
