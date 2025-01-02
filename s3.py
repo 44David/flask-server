@@ -32,7 +32,6 @@ class Upload():
                 bucket_name, 
                 img_name, 
                 ExtraArgs={
-                    "ACL": "public-read",
                     "ContentType": img_type,
                 }
             )

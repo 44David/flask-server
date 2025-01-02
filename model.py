@@ -14,10 +14,12 @@ def run_model(s3_url):
     import numpy as np
     from PIL import Image, ImageColor, ImageDraw, ImageFont, ImageOps
     import io
-
+    import uuid
 
     import time
     import mimetypes
+    from urllib.parse import urlparse
+    import os
 
     from s3 import Upload
 
@@ -28,20 +30,17 @@ def run_model(s3_url):
         plt.imshow(image)
         fig = plt.gcf()
 
-        global upload_fs, im
+        global in_mem_file, pil_image
 
         buffer = io.BytesIO()
         fig.savefig(buffer)
-        im = Image.open(buffer)
+        buffer.seek(0)
 
-        upload_fs = io.BytesIO()
-        im.save(upload_fs,  format)
-        
-        # buffer.seek(0)
-        # bytes = buffer.read()
-        # buf = BytesIO(bytes)
-        # final_buf = buf.read()
-        # img = Image.open(buffer)
+        pil_image = Image.open(buffer)
+
+        in_mem_file = io.BytesIO()
+        pil_image.save(in_mem_file,  pil_image.format)
+        in_mem_file.seek(0)
 
     def download_resize_img(url, n_width=256, n_height=256, display=False):
         _, filename = tempfile.mkstemp(suffix=".jpg")
@@ -154,8 +153,11 @@ def run_model(s3_url):
     run_detector(detector, downloaded_image_path)
 
     upload = Upload()
-    upload.s3_upload(upload_fs, im.filename, mimetypes.guess_type(im.filename))
+    # parsed_url = urlparse(s3_url)
+    # filename = os.path.basename(parsed_url.path)
+
+    upload.s3_upload(in_mem_file, f"image_{uuid.uuid4()}.png", 'image/png')
 
 
-    return upload_fs
+    return "Hello"
     
