@@ -14,7 +14,6 @@ def run_model(s3_url):
     import numpy as np
     from PIL import Image, ImageColor, ImageDraw, ImageFont, ImageOps
     import io
-    import uuid
 
     import time
     import mimetypes
@@ -158,6 +157,7 @@ def run_model(s3_url):
     mime_type, _ = mimetypes.guess_type(filename)
     upload.s3_upload(in_mem_file, filename, mime_type)
 
+    labelled_s3_url = upload.create_presigned_url(filename)
 
-    return "Hello"
+    return labelled_s3_url
     

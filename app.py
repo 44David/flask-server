@@ -9,24 +9,17 @@ app = Flask(__name__)
 CORS(app)
 
 @app.route('/')
-def hello():
-    return 'Does this update?'
-
-@app.route('/test', methods=['GET', 'POST'])
-def test():    
-    message = { "res": "Hello from flask server" }
-    return jsonify(message)
-
+def page():
+    return " "
 
 @app.route('/api', methods=['POST'])
 def index():
     req_json = request.get_json()
-
     s3_url = req_json.get("s3Url")
 
-    run_model(s3_url)
+    labelled_image_url = run_model(s3_url)
 
-    return 'Hello'
+    return jsonify({ "s3_labelled_url": labelled_image_url })
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0")
