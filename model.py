@@ -153,10 +153,10 @@ def run_model(s3_url):
     run_detector(detector, downloaded_image_path)
 
     upload = Upload()
-    # parsed_url = urlparse(s3_url)
-    # filename = os.path.basename(parsed_url.path)
-
-    upload.s3_upload(in_mem_file, f"image_{uuid.uuid4()}.png", 'image/png')
+    parsed_url = urlparse(s3_url)
+    filename = os.path.basename(parsed_url.path)
+    mime_type, _ = mimetypes.guess_type(filename)
+    upload.s3_upload(in_mem_file, filename, mime_type)
 
 
     return "Hello"
